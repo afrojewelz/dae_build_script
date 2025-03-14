@@ -45,7 +45,7 @@ else
 fi
 
 # private gitea
-export gitea=git.cooluc.com
+# export gitea=git.cooluc.com
 
 # github mirror
 if [ "$isCN" = "CN" ]; then
