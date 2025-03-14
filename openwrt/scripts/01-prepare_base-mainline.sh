@@ -59,7 +59,7 @@ fi
 cp -a target/linux/generic-6.13/* target/linux/generic
 
 # bcm53xx - fix build kernel with clang
-[ "$platform" = "bcm53xx" ] && [ "$KERNEL_CLANG_LTO" = "y" ] && rm -f target/linux/generic/hack-6.6/220-arm-gc_sections.patch target/linux/generic/hack-6.13/220-arm-gc_sections.patch
+# [ "$platform" = "bcm53xx" ] && [ "$KERNEL_CLANG_LTO" = "y" ] && rm -f target/linux/generic/hack-6.6/220-arm-gc_sections.patch target/linux/generic/hack-6.13/220-arm-gc_sections.patch
 
 # kernel modules
 rm -rf package/kernel/linux
@@ -199,14 +199,14 @@ curl -s $mirror/openwrt/patch/kernel-6.13/net/601-netfilter-export-udp_get_timeo
 curl -s $mirror/openwrt/patch/kernel-6.13/net/953-net-patch-linux-kernel-to-support-shortcut-fe.patch > target/linux/generic/hack-6.13/953-net-patch-linux-kernel-to-support-shortcut-fe.patch
 
 # RTC
-if [ "$platform" = "rk3399" ] || [ "$platform" = "rk3568" ]; then
-    curl -s $mirror/openwrt/patch/rtc/sysfixtime > package/base-files/files/etc/init.d/sysfixtime
-    chmod 755 package/base-files/files/etc/init.d/sysfixtime
-fi
+# if [ "$platform" = "rk3399" ] || [ "$platform" = "rk3568" ]; then
+#     curl -s $mirror/openwrt/patch/rtc/sysfixtime > package/base-files/files/etc/init.d/sysfixtime
+#     chmod 755 package/base-files/files/etc/init.d/sysfixtime
+# fi
 
 # emmc-install
-if [ "$platform" = "rk3568" ]; then
-    mkdir -p files/sbin
-    curl -so files/sbin/emmc-install $mirror/openwrt/files/sbin/emmc-install
-    chmod 755 files/sbin/emmc-install
-fi
+# if [ "$platform" = "rk3568" ]; then
+#     mkdir -p files/sbin
+#     curl -so files/sbin/emmc-install $mirror/openwrt/files/sbin/emmc-install
+#     chmod 755 files/sbin/emmc-install
+# fi

@@ -2,13 +2,13 @@
 
 # Rockchip - rkbin & u-boot
 rm -rf package/boot/rkbin package/boot/uboot-rockchip package/boot/arm-trusted-firmware-rockchip
-if [ "$platform" = "rk3568" ]; then
-    git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip
-    git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip
-else
-    git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip -b v2023.04
-    git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip -b 0419
-fi
+# if [ "$platform" = "rk3568" ]; then
+#     git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip
+#     git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip
+# else
+#     git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip -b v2023.04
+#     git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip -b 0419
+# fi
 
 # patch source
 curl -s $mirror/openwrt/patch/generic-24.10/0001-tools-add-upx-tools.patch | patch -p1
@@ -29,7 +29,7 @@ curl -s $mirror/openwrt/patch/generic-24.10/0010-kernel-add-PREEMPT_RT-support-f
 sed -i 's/noinitrd/noinitrd mitigations=off/g' target/linux/x86/image/grub-efi.cfg
 
 # default LAN IP
-sed -i "s/192.168.1.1/$LAN/g" package/base-files/files/bin/config_generate
+sed -i "s/192.168.50.1/$LAN/g" package/base-files/files/bin/config_generate
 
 # Use nginx instead of uhttpd
 if [ "$ENABLE_UHTTPD" != "y" ]; then
@@ -56,10 +56,10 @@ git clone https://$github/sbwml/package_kernel_r8126 package/kernel/r8126
 # GCC Optimization level -O3
 if [ "$platform" = "x86_64" ]; then
     curl -s $mirror/openwrt/patch/target-modify_for_x86_64.patch | patch -p1
-elif [ "$platform" = "armv8" ]; then
-    curl -s $mirror/openwrt/patch/target-modify_for_armsr.patch | patch -p1
-else
-    curl -s $mirror/openwrt/patch/target-modify_for_rockchip.patch | patch -p1
+# elif [ "$platform" = "armv8" ]; then
+#     curl -s $mirror/openwrt/patch/target-modify_for_armsr.patch | patch -p1
+# else
+#     curl -s $mirror/openwrt/patch/target-modify_for_rockchip.patch | patch -p1
 fi
 
 # DPDK & NUMACTL
@@ -248,7 +248,7 @@ popd
 sed -i "s/openwrt.org/www.qq.com/g" feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/diagnostics.js
 
 # luci - disable wireless WPA3
-[ "$platform" = "bcm53xx" ] && sed -i -e '/if (has_ap_sae || has_sta_sae) {/{N;N;N;N;d;}' feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+# [ "$platform" = "bcm53xx" ] && sed -i -e '/if (has_ap_sae || has_sta_sae) {/{N;N;N;N;d;}' feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 
 # odhcpd RFC-9096
 mkdir -p package/network/services/odhcpd/patches
@@ -274,10 +274,10 @@ mkdir -p files/etc/sysctl.d
 curl -so files/etc/sysctl.d/10-default.conf $mirror/openwrt/files/etc/sysctl.d/10-default.conf
 curl -so files/etc/sysctl.d/15-vm-swappiness.conf $mirror/openwrt/files/etc/sysctl.d/15-vm-swappiness.conf
 curl -so files/etc/sysctl.d/16-udp-buffer-size.conf $mirror/openwrt/files/etc/sysctl.d/16-udp-buffer-size.conf
-if [ "$platform" = "bcm53xx" ]; then
-    mkdir -p files/etc/hotplug.d/block
-    curl -so files/etc/hotplug.d/block/20-usbreset $mirror/openwrt/files/etc/hotplug.d/block/20-usbreset
-fi
+# if [ "$platform" = "bcm53xx" ]; then
+#     mkdir -p files/etc/hotplug.d/block
+#     curl -so files/etc/hotplug.d/block/20-usbreset $mirror/openwrt/files/etc/hotplug.d/block/20-usbreset
+# fi
 
 # NTP
 sed -i 's/0.openwrt.pool.ntp.org/ntp1.aliyun.com/g' package/base-files/files/bin/config_generate
