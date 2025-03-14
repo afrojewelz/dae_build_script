@@ -15,7 +15,7 @@ git clone https://$github/sbwml/default-settings package/new/default-settings -b
 git clone https://github.com/sbwml/wwan-packages package/new/wwan
 
 # ddns - fix boot
-sed -i '/boot()/,+2d' feeds/packages/net/ddns-scripts/files/etc/init.d/ddns
+# sed -i '/boot()/,+2d' feeds/packages/net/ddns-scripts/files/etc/init.d/ddns
 
 # nlbwmon - disable syslog
 sed -i 's/stderr 1/stderr 0/g' feeds/packages/net/nlbwmon/files/nlbwmon.init
