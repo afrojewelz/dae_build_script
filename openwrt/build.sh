@@ -33,9 +33,9 @@ if [ -n "$BUILD_SCRIPT_MIRROR" ]; then
     export mirror=$BUILD_SCRIPT_MIRROR
 else
     if [ "$isCN" = "CN" ]; then
-        export mirror=https://init.cooluc.com
+        export mirror=https://raw.githubusercontent.com/afrojewelz/dae_build_script/refs/heads/master
     else
-        export mirror=https://init2.cooluc.com
+        export mirror=https://raw.githubusercontent.com/afrojewelz/dae_build_script/refs/heads/master
     fi
 
     # github actions - caddy server
