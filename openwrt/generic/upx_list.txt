@@ -1,6 +1,3 @@
-/usr/bin/aircast
-/usr/bin/airupnp
-/usr/bin/alist
 /usr/bin/frpc
 /usr/bin/mosdns
 /usr/bin/sslocal
