@@ -100,13 +100,13 @@ elif [ "$1" = "rc2" ]; then
 fi
 
 # lan
-[ -n "$LAN" ] && export LAN=$LAN || export LAN=10.0.0.1
+[ -n "$LAN" ] && export LAN=$LAN || export LAN=192.168.50.1
 
 # platform
-[ "$2" = "armv8" ] && export platform="armv8" toolchain_arch="aarch64_generic"
-[ "$2" = "nanopi-r4s" ] && export platform="rk3399" toolchain_arch="aarch64_generic"
-[ "$2" = "nanopi-r5s" ] && export platform="rk3568" toolchain_arch="aarch64_generic"
-[ "$2" = "cudy_tr3000" ] && export platform="mediatek" toolchain_arch="aarch64_cortex-a53"
+# [ "$2" = "armv8" ] && export platform="armv8" toolchain_arch="aarch64_generic"
+# [ "$2" = "nanopi-r4s" ] && export platform="rk3399" toolchain_arch="aarch64_generic"
+# [ "$2" = "nanopi-r5s" ] && export platform="rk3568" toolchain_arch="aarch64_generic"
+# [ "$2" = "cudy_tr3000" ] && export platform="mediatek" toolchain_arch="aarch64_cortex-a53"
 [ "$2" = "x86_64" ] && export platform="x86_64" toolchain_arch="x86_64"
 
 # gcc14 & 15
@@ -132,18 +132,18 @@ export \
 echo -e "\r\n${GREEN_COLOR}Building $branch${RES}\r\n"
 if [ "$platform" = "x86_64" ]; then
     echo -e "${GREEN_COLOR}Model: x86_64${RES}"
-elif [ "$platform" = "armv8" ]; then
-    echo -e "${GREEN_COLOR}Model: armsr/armv8${RES}"
-    [ "$1" = "rc2" ] && model="armv8"
-elif [ "$platform" = "mediatek" ]; then
-    echo -e "${GREEN_COLOR}Model: cudy_tr3000${RES}"
-    [ "$LAN" = "10.0.0.1" ] && export LAN="192.168.1.1"
-elif [ "$platform" = "rk3568" ]; then
-    echo -e "${GREEN_COLOR}Model: nanopi-r5s/r5c${RES}"
-    [ "$1" = "rc2" ] && model="nanopi-r5s"
-else
-    echo -e "${GREEN_COLOR}Model: nanopi-r4s${RES}"
-    [ "$1" = "rc2" ] && model="nanopi-r4s"
+# elif [ "$platform" = "armv8" ]; then
+#     echo -e "${GREEN_COLOR}Model: armsr/armv8${RES}"
+#     [ "$1" = "rc2" ] && model="armv8"
+# elif [ "$platform" = "mediatek" ]; then
+#     echo -e "${GREEN_COLOR}Model: cudy_tr3000${RES}"
+#     [ "$LAN" = "192.168.50.1" ] && export LAN="192.168.1.1"
+# elif [ "$platform" = "rk3568" ]; then
+#     echo -e "${GREEN_COLOR}Model: nanopi-r5s/r5c${RES}"
+#     [ "$1" = "rc2" ] && model="nanopi-r5s"
+# else
+#     echo -e "${GREEN_COLOR}Model: nanopi-r4s${RES}"
+#     [ "$1" = "rc2" ] && model="nanopi-r4s"
 fi
 get_kernel_version=$(curl -s $mirror/tags/kernel-6.13)
 kmod_hash=$(echo -e "$get_kernel_version" | awk -F'HASH-' '{print $2}' | awk '{print $1}' | tail -1 | md5sum | awk '{print $1}')
@@ -152,7 +152,7 @@ echo -e "${GREEN_COLOR}Kernel: $kmodpkg_name ${RES}"
 
 echo -e "${GREEN_COLOR}Date: $CURRENT_DATE${RES}\r\n"
 echo -e "${GREEN_COLOR}GCC VERSION: $gcc_version${RES}"
-[ -n "$LAN" ] && echo -e "${GREEN_COLOR}LAN: $LAN${RES}" || echo -e "${GREEN_COLOR}LAN: 10.0.0.1${RES}"
+[ -n "$LAN" ] && echo -e "${GREEN_COLOR}LAN: $LAN${RES}" || echo -e "${GREEN_COLOR}LAN: 192.168.50.1${RES}"
 [ "$ENABLE_OTA" = "y" ] && echo -e "${GREEN_COLOR}ENABLE_OTA: true${RES}" || echo -e "${GREEN_COLOR}ENABLE_OTA:${RES} ${YELLOW_COLOR}false${RES}"
 [ "$ENABLE_DPDK" = "y" ] && echo -e "${GREEN_COLOR}ENABLE_DPDK: true${RES}" || echo -e "${GREEN_COLOR}ENABLE_DPDK:${RES} ${YELLOW_COLOR}false${RES}"
 [ "$ENABLE_MOLD" = "y" ] && echo -e "${GREEN_COLOR}ENABLE_MOLD: true${RES}" || echo -e "${GREEN_COLOR}ENABLE_MOLD:${RES} ${YELLOW_COLOR}false${RES}"
@@ -254,15 +254,15 @@ rm -f 0*-*.sh 10-custom.sh
 # Load devices Config
 if [ "$platform" = "x86_64" ]; then
     curl -s $mirror/openwrt/24-config-musl-x86 > .config
-elif [ "$platform" = "mediatek" ]; then
-    curl -s $mirror/openwrt/24-config-musl-tr3000 > .config
-    sed -i '1i\# CONFIG_PACKAGE_kselftests-bpf is not set\n# CONFIG_PACKAGE_perf is not set\n' .config
-elif [ "$platform" = "rk3568" ]; then
-    curl -s $mirror/openwrt/24-config-musl-r5s > .config
-elif [ "$platform" = "armv8" ]; then
-    curl -s $mirror/openwrt/24-config-musl-armsr-armv8 > .config
-else
-    curl -s $mirror/openwrt/24-config-musl-r4s > .config
+# elif [ "$platform" = "mediatek" ]; then
+#     curl -s $mirror/openwrt/24-config-musl-tr3000 > .config
+#     sed -i '1i\# CONFIG_PACKAGE_kselftests-bpf is not set\n# CONFIG_PACKAGE_perf is not set\n' .config
+# elif [ "$platform" = "rk3568" ]; then
+#     curl -s $mirror/openwrt/24-config-musl-r5s > .config
+# elif [ "$platform" = "armv8" ]; then
+#     curl -s $mirror/openwrt/24-config-musl-armsr-armv8 > .config
+# else
+#     curl -s $mirror/openwrt/24-config-musl-r4s > .config
 fi
 
 # config-common
@@ -457,146 +457,146 @@ EOF
         tar cf ../dl.gz dl
     fi
     exit 0
-elif [ "$platform" = "armv8" ]; then
-    if [ "$NO_KMOD" != "y" ]; then
-        cp -a bin/targets/armsr/armv8*/packages $kmodpkg_name
-        rm -f $kmodpkg_name/Packages*
-        cp -a bin/packages/aarch64_generic/base/rtl88*a-firmware*.ipk $kmodpkg_name/
-        cp -a bin/packages/aarch64_generic/base/natflow*.ipk $kmodpkg_name/
-        [ "$OPENWRT_CORE" = "y" ] && {
-            cp -a bin/packages/aarch64_generic/base/*3ginfo*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*modemband*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*sms-tool*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*quectel*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*fibocom*.ipk $kmodpkg_name/
-        }
-        [ "$ENABLE_DPDK" = "y" ] && {
-            cp -a bin/packages/aarch64_generic/base/*dpdk*.ipk $kmodpkg_name/ || true
-            cp -a bin/packages/aarch64_generic/base/*numa*.ipk $kmodpkg_name/ || true
-        }
-        bash kmod-sign $kmodpkg_name
-        tar zcf armv8-$kmodpkg_name.tar.gz $kmodpkg_name
-        rm -rf $kmodpkg_name
-    fi
-    # OTA json
-    if [ "$1" = "rc2" ]; then
-        mkdir -p ota
-        VERSION=$(sed 's/v//g' version.txt)
-        SHA256=$(sha256sum bin/targets/armsr/armv8*/*-generic-squashfs-combined-efi.img.gz | awk '{print $1}')
-        cat > ota/fw.json <<EOF
-{
-  "armsr,armv8": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256",
-      "url": "https://github.com/sbwml/builder/releases/download/v$VERSION/openwrt-$VERSION-armsr-armv8-generic-squashfs-combined-efi.img.gz"
-    }
-  ]
-}
-EOF
-    fi
-    exit 0
-elif [ "$platform" = "bcm53xx" ]; then
-    if [ "$NO_KMOD" != "y" ]; then
-        cp -a bin/targets/bcm53xx/generic/packages $kmodpkg_name
-        rm -f $kmodpkg_name/Packages*
-        cp -a bin/packages/arm_cortex-a9/base/rtl88*a-firmware*.ipk $kmodpkg_name/
-        cp -a bin/packages/arm_cortex-a9/base/natflow*.ipk $kmodpkg_name/
-        [ "$OPENWRT_CORE" = "y" ] && {
-            cp -a bin/packages/arm_cortex-a9/base/*3ginfo*.ipk $kmodpkg_name/
-            cp -a bin/packages/arm_cortex-a9/base/*modemband*.ipk $kmodpkg_name/
-            cp -a bin/packages/arm_cortex-a9/base/*sms-tool*.ipk $kmodpkg_name/
-            cp -a bin/packages/arm_cortex-a9/base/*quectel*.ipk $kmodpkg_name/
-            cp -a bin/packages/arm_cortex-a9/base/*fibocom*.ipk $kmodpkg_name/
-        }
-        bash kmod-sign $kmodpkg_name
-        tar zcf bcm53xx-$kmodpkg_name.tar.gz $kmodpkg_name
-        rm -rf $kmodpkg_name
-    fi
-    # OTA json
-    if [ "$1" = "rc2" ]; then
-        mkdir -p ota
-        if [ "$MINIMAL_BUILD" = "y" ]; then
-            OTA_URL="https://r8500.cooluc.com/d/minimal/openwrt-24.10"
-        else
-            OTA_URL="https://github.com/sbwml/builder/releases/download"
-        fi
-        VERSION=$(sed 's/v//g' version.txt)
-        SHA256=$(sha256sum bin/targets/mediatek/generic/*-mediatek-generic-cudy_tr3000-squashfs.chk | awk '{print $1}')
-        cat > ota/fw.json <<EOF
-{
-  "netgear,r8500": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256",
-      "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-mediatek-generic-cudy_tr3000-squashfs.chk"
-    }
-  ]
-}
-EOF
-    fi
-    exit 0
-else
-    if [ "$NO_KMOD" != "y" ] && [ "$platform" != "rk3399" ]; then
-        cp -a bin/targets/rockchip/armv8*/packages $kmodpkg_name
-        rm -f $kmodpkg_name/Packages*
-        cp -a bin/packages/aarch64_generic/base/rtl88*a-firmware*.ipk $kmodpkg_name/
-        cp -a bin/packages/aarch64_generic/base/natflow*.ipk $kmodpkg_name/
-        [ "$OPENWRT_CORE" = "y" ] && {
-            cp -a bin/packages/aarch64_generic/base/*3ginfo*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*modemband*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*sms-tool*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*quectel*.ipk $kmodpkg_name/
-            cp -a bin/packages/aarch64_generic/base/*fibocom*.ipk $kmodpkg_name/
-        }
-        [ "$ENABLE_DPDK" = "y" ] && {
-            cp -a bin/packages/aarch64_generic/base/*dpdk*.ipk $kmodpkg_name/ || true
-            cp -a bin/packages/aarch64_generic/base/*numa*.ipk $kmodpkg_name/ || true
-        }
-        bash kmod-sign $kmodpkg_name
-        tar zcf aarch64-$kmodpkg_name.tar.gz $kmodpkg_name
-        rm -rf $kmodpkg_name
-    fi
-    # OTA json
-    if [ "$1" = "rc2" ]; then
-        mkdir -p ota
-        OTA_URL="https://github.com/sbwml/builder/releases/download"
-        VERSION=$(sed 's/v//g' version.txt)
-        if [ "$model" = "nanopi-r4s" ]; then
-            [ "$MINIMAL_BUILD" = "y" ] && OTA_URL="https://r4s.cooluc.com/d/minimal/openwrt-24.10"
-            SHA256=$(sha256sum bin/targets/rockchip/armv8*/*-squashfs-sysupgrade.img.gz | awk '{print $1}')
-            cat > ota/fw.json <<EOF
-{
-  "friendlyarm,nanopi-r4s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256",
-      "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r4s-squashfs-sysupgrade.img.gz"
-    }
-  ]
-}
-EOF
-        elif [ "$model" = "nanopi-r5s" ]; then
-            [ "$MINIMAL_BUILD" = "y" ] && OTA_URL="https://r5s.cooluc.com/d/minimal/openwrt-24.10"
-            SHA256_R5C=$(sha256sum bin/targets/rockchip/armv8*/*-r5c-squashfs-sysupgrade.img.gz | awk '{print $1}')
-            SHA256_R5S=$(sha256sum bin/targets/rockchip/armv8*/*-r5s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-            cat > ota/fw.json <<EOF
-{
-  "friendlyarm,nanopi-r5c": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_R5C",
-      "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r5s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_R5S",
-      "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz"
-    }
-  ]
-}
+# elif [ "$platform" = "armv8" ]; then
+#     if [ "$NO_KMOD" != "y" ]; then
+#         cp -a bin/targets/armsr/armv8*/packages $kmodpkg_name
+#         rm -f $kmodpkg_name/Packages*
+#         cp -a bin/packages/aarch64_generic/base/rtl88*a-firmware*.ipk $kmodpkg_name/
+#         cp -a bin/packages/aarch64_generic/base/natflow*.ipk $kmodpkg_name/
+#         [ "$OPENWRT_CORE" = "y" ] && {
+#             cp -a bin/packages/aarch64_generic/base/*3ginfo*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*modemband*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*sms-tool*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*quectel*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*fibocom*.ipk $kmodpkg_name/
+#         }
+#         [ "$ENABLE_DPDK" = "y" ] && {
+#             cp -a bin/packages/aarch64_generic/base/*dpdk*.ipk $kmodpkg_name/ || true
+#             cp -a bin/packages/aarch64_generic/base/*numa*.ipk $kmodpkg_name/ || true
+#         }
+#         bash kmod-sign $kmodpkg_name
+#         tar zcf armv8-$kmodpkg_name.tar.gz $kmodpkg_name
+#         rm -rf $kmodpkg_name
+#     fi
+#     # OTA json
+#     if [ "$1" = "rc2" ]; then
+#         mkdir -p ota
+#         VERSION=$(sed 's/v//g' version.txt)
+#         SHA256=$(sha256sum bin/targets/armsr/armv8*/*-generic-squashfs-combined-efi.img.gz | awk '{print $1}')
+#         cat > ota/fw.json <<EOF
+# {
+#   "armsr,armv8": [
+#     {
+#       "build_date": "$CURRENT_DATE",
+#       "sha256sum": "$SHA256",
+#       "url": "https://github.com/sbwml/builder/releases/download/v$VERSION/openwrt-$VERSION-armsr-armv8-generic-squashfs-combined-efi.img.gz"
+#     }
+#   ]
+# }
+# EOF
+#     fi
+#     exit 0
+# elif [ "$platform" = "bcm53xx" ]; then
+#     if [ "$NO_KMOD" != "y" ]; then
+#         cp -a bin/targets/bcm53xx/generic/packages $kmodpkg_name
+#         rm -f $kmodpkg_name/Packages*
+#         cp -a bin/packages/arm_cortex-a9/base/rtl88*a-firmware*.ipk $kmodpkg_name/
+#         cp -a bin/packages/arm_cortex-a9/base/natflow*.ipk $kmodpkg_name/
+#         [ "$OPENWRT_CORE" = "y" ] && {
+#             cp -a bin/packages/arm_cortex-a9/base/*3ginfo*.ipk $kmodpkg_name/
+#             cp -a bin/packages/arm_cortex-a9/base/*modemband*.ipk $kmodpkg_name/
+#             cp -a bin/packages/arm_cortex-a9/base/*sms-tool*.ipk $kmodpkg_name/
+#             cp -a bin/packages/arm_cortex-a9/base/*quectel*.ipk $kmodpkg_name/
+#             cp -a bin/packages/arm_cortex-a9/base/*fibocom*.ipk $kmodpkg_name/
+#         }
+#         bash kmod-sign $kmodpkg_name
+#         tar zcf bcm53xx-$kmodpkg_name.tar.gz $kmodpkg_name
+#         rm -rf $kmodpkg_name
+#     fi
+#     # OTA json
+#     if [ "$1" = "rc2" ]; then
+#         mkdir -p ota
+#         if [ "$MINIMAL_BUILD" = "y" ]; then
+#             OTA_URL="https://r8500.cooluc.com/d/minimal/openwrt-24.10"
+#         else
+#             OTA_URL="https://github.com/sbwml/builder/releases/download"
+#         fi
+#         VERSION=$(sed 's/v//g' version.txt)
+#         SHA256=$(sha256sum bin/targets/mediatek/generic/*-mediatek-generic-cudy_tr3000-squashfs.chk | awk '{print $1}')
+#         cat > ota/fw.json <<EOF
+# {
+#   "netgear,r8500": [
+#     {
+#       "build_date": "$CURRENT_DATE",
+#       "sha256sum": "$SHA256",
+#       "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-mediatek-generic-cudy_tr3000-squashfs.chk"
+#     }
+#   ]
+# }
+# EOF
+#     fi
+#     exit 0
+# else
+#     if [ "$NO_KMOD" != "y" ] && [ "$platform" != "rk3399" ]; then
+#         cp -a bin/targets/rockchip/armv8*/packages $kmodpkg_name
+#         rm -f $kmodpkg_name/Packages*
+#         cp -a bin/packages/aarch64_generic/base/rtl88*a-firmware*.ipk $kmodpkg_name/
+#         cp -a bin/packages/aarch64_generic/base/natflow*.ipk $kmodpkg_name/
+#         [ "$OPENWRT_CORE" = "y" ] && {
+#             cp -a bin/packages/aarch64_generic/base/*3ginfo*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*modemband*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*sms-tool*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*quectel*.ipk $kmodpkg_name/
+#             cp -a bin/packages/aarch64_generic/base/*fibocom*.ipk $kmodpkg_name/
+#         }
+#         [ "$ENABLE_DPDK" = "y" ] && {
+#             cp -a bin/packages/aarch64_generic/base/*dpdk*.ipk $kmodpkg_name/ || true
+#             cp -a bin/packages/aarch64_generic/base/*numa*.ipk $kmodpkg_name/ || true
+#         }
+#         bash kmod-sign $kmodpkg_name
+#         tar zcf aarch64-$kmodpkg_name.tar.gz $kmodpkg_name
+#         rm -rf $kmodpkg_name
+#     fi
+#     # OTA json
+#     if [ "$1" = "rc2" ]; then
+#         mkdir -p ota
+#         OTA_URL="https://github.com/sbwml/builder/releases/download"
+#         VERSION=$(sed 's/v//g' version.txt)
+#         if [ "$model" = "nanopi-r4s" ]; then
+#             [ "$MINIMAL_BUILD" = "y" ] && OTA_URL="https://r4s.cooluc.com/d/minimal/openwrt-24.10"
+#             SHA256=$(sha256sum bin/targets/rockchip/armv8*/*-squashfs-sysupgrade.img.gz | awk '{print $1}')
+#             cat > ota/fw.json <<EOF
+# {
+#   "friendlyarm,nanopi-r4s": [
+#     {
+#       "build_date": "$CURRENT_DATE",
+#       "sha256sum": "$SHA256",
+#       "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r4s-squashfs-sysupgrade.img.gz"
+#     }
+#   ]
+# }
+# EOF
+#         elif [ "$model" = "nanopi-r5s" ]; then
+#             [ "$MINIMAL_BUILD" = "y" ] && OTA_URL="https://r5s.cooluc.com/d/minimal/openwrt-24.10"
+#             SHA256_R5C=$(sha256sum bin/targets/rockchip/armv8*/*-r5c-squashfs-sysupgrade.img.gz | awk '{print $1}')
+#             SHA256_R5S=$(sha256sum bin/targets/rockchip/armv8*/*-r5s-squashfs-sysupgrade.img.gz | awk '{print $1}')
+#             cat > ota/fw.json <<EOF
+# {
+#   "friendlyarm,nanopi-r5c": [
+#     {
+#       "build_date": "$CURRENT_DATE",
+#       "sha256sum": "$SHA256_R5C",
+#       "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz"
+#     }
+#   ],
+#   "friendlyarm,nanopi-r5s": [
+#     {
+#       "build_date": "$CURRENT_DATE",
+#       "sha256sum": "$SHA256_R5S",
+#       "url": "$OTA_URL/v$VERSION/openwrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz"
+#     }
+#   ]
+# }
 EOF
         fi
     fi
