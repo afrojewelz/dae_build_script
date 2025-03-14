@@ -355,41 +355,41 @@ define KernelPackage/usb-ehci
 endef
 $(eval $(call KernelPackage,usb-ehci))
 
-define KernelPackage/usb2
-  TITLE:=Support for USB2 controllers
-  DEPENDS:=\
-	+TARGET_bcm47xx:kmod-usb-bcma \
-	+TARGET_bcm47xx:kmod-usb-ssb \
-	+TARGET_bcm53xx:kmod-usb-bcma \
-	# +TARGET_bcm53xx:kmod-phy-bcm-ns-usb2 \
-	+TARGET_ath79:kmod-phy-ath79-usb \
-	+kmod-usb-ehci
-  KCONFIG:=\
-	CONFIG_USB_EHCI_HCD_PLATFORM \
-	CONFIG_USB_EHCI_BCM63XX=y \
-	CONFIG_USB_IMX21_HCD=y \
-	CONFIG_USB_EHCI_MXC=y \
-	CONFIG_USB_OCTEON_EHCI=y \
-	CONFIG_USB_EHCI_HCD_ORION=y \
-	CONFIG_USB_EHCI_HCD_AT91=y \
-	CONFIG_USB_EHCI_FSL
-  FILES:= \
-	$(LINUX_DIR)/drivers/usb/host/ehci-platform.ko
-  ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/ehci-orion.ko),)
-    FILES+=$(LINUX_DIR)/drivers/usb/host/ehci-orion.ko
-  endif
-  ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/ehci-atmel.ko),)
-    FILES+=$(LINUX_DIR)/drivers/usb/host/ehci-atmel.ko
-  endif
-  ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/ehci-fsl.ko),)
-    FILES+=$(LINUX_DIR)/drivers/usb/host/ehci-fsl.ko
-  endif
-  ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/fsl-mph-dr-of.ko),)
-    FILES+=$(LINUX_DIR)/drivers/usb/host/fsl-mph-dr-of.ko
-  endif
-  AUTOLOAD:=$(call AutoLoad,40,ehci-hcd ehci-platform ehci-orion ehci-atmel ehci-fsl fsl-mph-dr-of,1)
-  $(call AddDepends/usb)
-endef
+# define KernelPackage/usb2
+#   TITLE:=Support for USB2 controllers
+#   DEPENDS:=\
+# 	+TARGET_bcm47xx:kmod-usb-bcma \
+# 	+TARGET_bcm47xx:kmod-usb-ssb \
+# 	+TARGET_bcm53xx:kmod-usb-bcma \
+# 	+TARGET_bcm53xx:kmod-phy-bcm-ns-usb2 \
+# 	+TARGET_ath79:kmod-phy-ath79-usb \
+# 	+kmod-usb-ehci
+#   KCONFIG:=\
+# 	CONFIG_USB_EHCI_HCD_PLATFORM \
+# 	CONFIG_USB_EHCI_BCM63XX=y \
+# 	CONFIG_USB_IMX21_HCD=y \
+# 	CONFIG_USB_EHCI_MXC=y \
+# 	CONFIG_USB_OCTEON_EHCI=y \
+# 	CONFIG_USB_EHCI_HCD_ORION=y \
+# 	CONFIG_USB_EHCI_HCD_AT91=y \
+# 	CONFIG_USB_EHCI_FSL
+#   FILES:= \
+# 	$(LINUX_DIR)/drivers/usb/host/ehci-platform.ko
+#   ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/ehci-orion.ko),)
+#     FILES+=$(LINUX_DIR)/drivers/usb/host/ehci-orion.ko
+#   endif
+#   ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/ehci-atmel.ko),)
+#     FILES+=$(LINUX_DIR)/drivers/usb/host/ehci-atmel.ko
+#   endif
+#   ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/ehci-fsl.ko),)
+#     FILES+=$(LINUX_DIR)/drivers/usb/host/ehci-fsl.ko
+#   endif
+#   ifneq ($(wildcard $(LINUX_DIR)/drivers/usb/host/fsl-mph-dr-of.ko),)
+#     FILES+=$(LINUX_DIR)/drivers/usb/host/fsl-mph-dr-of.ko
+#   endif
+#   AUTOLOAD:=$(call AutoLoad,40,ehci-hcd ehci-platform ehci-orion ehci-atmel ehci-fsl fsl-mph-dr-of,1)
+#   $(call AddDepends/usb)
+# endef
 
 define KernelPackage/usb2/description
  Kernel support for USB2 (EHCI) controllers
@@ -1801,26 +1801,26 @@ XHCI_MODULES := xhci-pci xhci-plat-hcd
 XHCI_FILES := $(wildcard $(patsubst %,$(LINUX_DIR)/drivers/usb/host/%.ko,$(XHCI_MODULES)))
 XHCI_AUTOLOAD := $(patsubst $(LINUX_DIR)/drivers/usb/host/%.ko,%,$(XHCI_FILES))
 
-define KernelPackage/usb3
-  TITLE:=Support for USB3 controllers
-  DEPENDS:= \
-	+kmod-usb-xhci-hcd \
-	+TARGET_bcm53xx:kmod-usb-bcma \
-	# +TARGET_bcm53xx:kmod-phy-bcm-ns-usb3 \
-	+TARGET_ramips_mt7621:kmod-usb-xhci-mtk \
-	+TARGET_mediatek:kmod-usb-xhci-mtk \
-	+TARGET_apm821xx_nand:kmod-usb-xhci-pci-renesas \
-	+TARGET_lantiq_xrx200:kmod-usb-xhci-pci-renesas \
-	+TARGET_mvebu_cortexa9:kmod-usb-xhci-pci-renesas
-  KCONFIG:= \
-	CONFIG_USB_PCI=y \
-	CONFIG_USB_XHCI_PCI \
-	CONFIG_USB_XHCI_PLATFORM
-  FILES:= \
-	$(XHCI_FILES)
-  AUTOLOAD:=$(call AutoLoad,54,$(XHCI_AUTOLOAD),1)
-  $(call AddDepends/usb)
-endef
+# define KernelPackage/usb3
+#   TITLE:=Support for USB3 controllers
+#   DEPENDS:= \
+# 	+kmod-usb-xhci-hcd \
+# 	+TARGET_bcm53xx:kmod-usb-bcma \
+# 	+TARGET_bcm53xx:kmod-phy-bcm-ns-usb3 \
+# 	+TARGET_ramips_mt7621:kmod-usb-xhci-mtk \
+# 	+TARGET_mediatek:kmod-usb-xhci-mtk \
+# 	+TARGET_apm821xx_nand:kmod-usb-xhci-pci-renesas \
+# 	+TARGET_lantiq_xrx200:kmod-usb-xhci-pci-renesas \
+# 	+TARGET_mvebu_cortexa9:kmod-usb-xhci-pci-renesas
+#   KCONFIG:= \
+# 	CONFIG_USB_PCI=y \
+# 	CONFIG_USB_XHCI_PCI \
+# 	CONFIG_USB_XHCI_PLATFORM
+#   FILES:= \
+# 	$(XHCI_FILES)
+#   AUTOLOAD:=$(call AutoLoad,54,$(XHCI_AUTOLOAD),1)
+#   $(call AddDepends/usb)
+# endef
 
 define KernelPackage/usb3/description
  Kernel support for USB3 (XHCI) controllers
